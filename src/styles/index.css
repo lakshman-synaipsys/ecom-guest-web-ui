@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-ink font-sans antialiased;
+    /* iPhone safe areas: the bottom bar must not sit under the home bar */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+
+  /* A price is a number people compare. Tabular figures stop the rupee
+     column jittering as the digits change. */
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  ::selection { @apply bg-leaf-soft text-leaf-dark; }
+
+  /* Horizontal rails are everywhere in this app; the scrollbar is noise. */
+  .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+@layer utilities {
+  /* Three dots walking - used only where something is genuinely moving. */
+  @keyframes walk {
+    0%, 100% { transform: translateY(0);     opacity: 0.45; }
+    35%      { transform: translateY(-5px);  opacity: 1; }
+  }
+}
+
+@layer components {
+  /* ------------------------------------------------------------ buttons */
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-pill px-5 py-3
+           text-[0.9375rem] font-semibold transition-all
+           disabled:cursor-not-allowed disabled:opacity-45
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-leaf/40;
+  }
+
+  .btn-primary  { @apply btn bg-leaf text-white shadow-card hover:bg-leaf-dark active:scale-[0.98]; }
+  .btn-secondary{ @apply btn border border-line-strong bg-surface text-ink hover:bg-sand; }
+  .btn-ghost    { @apply btn text-ink-soft hover:bg-sand; }
+  .btn-carrot   { @apply btn bg-carrot text-white shadow-card hover:brightness-95 active:scale-[0.98]; }
+  .btn-sm       { @apply px-3.5 py-2 text-[0.8125rem]; }
+  .btn-block    { @apply w-full; }
+
+  /* ------------------------------------------------------------- panels */
+
+  .card {
+    @apply rounded-card border border-line bg-surface shadow-card;
+  }
+
+  .tile {
+    @apply rounded-tile border border-line bg-surface shadow-card transition-shadow
+           hover:shadow-lift;
+  }
+
+  /* -------------------------------------------------------------- forms */
+
+  .input {
+    @apply w-full rounded-2xl border border-line-strong bg-surface px-4 py-3 text-[0.9375rem]
+           text-ink placeholder:text-ink-faint
+           focus:border-leaf focus:outline-none focus:ring-2 focus:ring-leaf/20;
+  }
+
+  .label { @apply mb-1.5 block text-[0.8125rem] font-medium text-ink-soft; }
+  .hint  { @apply mt-1.5 block text-xs text-ink-muted; }
+
+  /* -------------------------------------------------------------- chips */
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-pill px-2.5 py-1
+           text-2xs font-semibold;
+  }
+
+  .chip-leaf   { @apply chip bg-leaf-soft text-leaf-dark; }
+  .chip-carrot { @apply chip bg-carrot-soft text-carrot; }
+  .chip-berry  { @apply chip bg-berry-soft text-berry; }
+  .chip-sun    { @apply chip bg-sun-soft text-sun; }
+  .chip-quiet  { @apply chip bg-sand text-ink-soft; }
+
+  /* ------------------------------------------------------------ headings */
+
+  .section-title { @apply font-display text-lg font-semibold tracking-tight text-ink; }
+  .eyebrow {
+    @apply text-2xs font-semibold uppercase tracking-[0.09em] text-ink-muted;
+  }
+
+  /* A horizontal rail that bleeds to the screen edge on phones, so the
+     last card is visibly cut off and people know to swipe. */
+  /*
+   * items-stretch is the whole fix for ragged rails: without it a flex
+   * child sizes to its own content, so a card with a two-line name ends
+   * up taller than one with a single line and the row looks broken.
+   */
+  .rail {
+    @apply -mx-4 flex items-stretch gap-3 overflow-x-auto px-4 pb-1 no-scrollbar sm:mx-0 sm:px-0;
+    scroll-snap-type: x proximity;
+  }
+  .rail > * { scroll-snap-align: start; }
+
+  /* ------------------------------------------------------------ prices */
+
+  /*
+   * A price is three things, and they must always sit in this order and
+   * this weight: what you pay, what it was, how much that saves. Written
+   * as classes so no card can accidentally show the saving louder than
+   * the price.
+   */
+  .price-now   { @apply font-semibold tabular text-ink; }
+  .price-was   { @apply text-2xs tabular text-ink-faint line-through; }
+  .price-save  { @apply text-2xs font-semibold text-carrot; }
+
+  /* ---------------------------------------------------------- skeletons */
+
+  .skeleton {
+    @apply relative overflow-hidden rounded-tile bg-sand;
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    animation: shimmer 1.4s infinite;
+    transform: translateX(-100%);
+  }
+}
